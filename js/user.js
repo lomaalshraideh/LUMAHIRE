@@ -14,7 +14,8 @@ let mainUsers = [
     phone : '0123456789',
     age : 25,
     email: 'luma@gmail.com',
-    password: 'Asdfghjkl1*'
+    password: 'Asdfghjkl1*',
+    history: []
   },
   {
     id: 2,
@@ -22,7 +23,8 @@ let mainUsers = [
     phone : '0123456789',
     age : 27,
     email: 'osama@gmail.com',
-    password: 'Asdfghjkl1*'
+    password: 'Asdfghjkl1*',
+    history: []
   },
   {
     id: 2,
@@ -30,7 +32,8 @@ let mainUsers = [
     phone : '0123456789',
     age : 26,
     email: 'omar@gmail.com',
-    password: 'Asdfghjkl1*'
+    password: 'Asdfghjkl1*',
+    history: []
   },
   {
     id: 2,
@@ -38,7 +41,8 @@ let mainUsers = [
     phone : '0123456789',
     age : 25,
     email: 'sara@gmail.com',
-    password: 'Asdfghjkl1*'
+    password: 'Asdfghjkl1*',
+    history: []
   },
 ]
 
@@ -63,6 +67,15 @@ form.addEventListener('submit' , (event) => {
   }
   
 
+  checkAge = (age) => {
+    if (age < 18) {
+      registerMessage.textContent += '❌ Age must be at least 18';
+      userAge.focus();
+      return false
+    }
+    return true
+  }
+  
   function checkPasswordConfirm(password , confirmPassword) {
     if (password.value !== confirmPassword.value) {
       registerMessage.textContent += ' Passwords do not match';
@@ -107,9 +120,9 @@ form.addEventListener('submit' , (event) => {
   }
 
   
-  if (minLength(password.value) && hasUpperCase(password.value) 
+  if (checkAge(userAge.value) && minLength(password.value) && hasUpperCase(password.value) 
       && hasNumber(password.value) && hasSpecialChar(password.value) 
-      && checkEmail(email) && checkPasswordConfirm(password , confirmPassword)) {
+      && checkEmail(email) && checkPasswordConfirm(password , confirmPassword)  ) {
       registerMessage.textContent = "✅ Registered successfully";
       registerMessage.style.color = "green";
       
@@ -119,13 +132,15 @@ form.addEventListener('submit' , (event) => {
         phone : userPhone.value,
         age : userAge.value,
         email: email.value,
-        password: password.value
+        password: password.value,
+        history: []
       }
       
       users.push(user);
       localStorage.setItem('users', JSON.stringify(users));
       window.location.reload();
   } else {
+      registerMessage.classList.remove('d-none');
       registerMessage.style.color = "red";
   }
   
@@ -162,19 +177,26 @@ if(customer[0].password===loginPassword.value
     phone : customer[0].phone,
     age : customer[0].age,
     email: customer[0].email,
-    history: [],
+    history: customer[0].history,
   }
-  loginMessage.textContent="Logged in successfully";
+  loginMessage.textContent="✅ Logged in successfully";
+  loginMessage.style.color="black"
   localStorage.setItem('user',JSON.stringify(userData))
   window.location.href="../pages/jobsList.html"
 
   
-}else { loginMessage.textContent="Wrong password"
+}else { 
+  loginMessage.textContent="❌ Wrong password"
+  loginMessage.style.color="red"
+  loginMessage.classList.remove('d-none')
 
 }
 
 }else{
-  loginMessage.textContent="Email not found"
+  loginMessage.textContent="❌ Email not found"
+  loginMessage.style.color="red"
+  loginMessage.classList.remove('d-none')
+
 }
 })
 
